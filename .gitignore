@@ -102,3 +102,7 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Database misc
+data/db/diagnostic.data
+data/db/journal

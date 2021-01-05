@@ -1,0 +1,33 @@
+{
+  "name": "cursoangularavanzado--backend",
+  "version": "1.0.0",
+  "description": "Backend server for adminpro",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SergioAndrade22/CursoAngularAvanzado--BackEnd.git"
+  },
+  "keywords": [
+    "Express",
+    "Node",
+    "Angular",
+    "MongoDB"
+  ],
+  "author": "Sergio Andrade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SergioAndrade22/CursoAngularAvanzado--BackEnd/issues"
+  },
+  "homepage": "https://github.com/SergioAndrade22/CursoAngularAvanzado--BackEnd#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^5.11.10"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}

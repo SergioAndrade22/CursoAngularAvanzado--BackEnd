@@ -24,8 +24,12 @@
   },
   "homepage": "https://github.com/SergioAndrade22/CursoAngularAvanzado--BackEnd#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "mongoose": "^5.11.10"
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.10",
+    "mongoose-unique-validator": "^2.0.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.6"

@@ -5,18 +5,26 @@
 // Required
 var express = require('express'); // loads express 
 var mongoose = require('mongoose'); // loads mongoose
-
+var bodyParser = require('body-parser') // loads body-parser
 
 // Initialization
 var app = express();
 
 
+// BodyParser config
+app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
+ 
+app.use(bodyParser.json()); // parse application/json
+
+
 // Import routes
 var appRoutes = require('./routes/app'); // imports the routes located in another file
 var userRoutes = require('./routes/user'); // imports the routes used for user
+var loginRoutes = require('./routes/login'); // imports the routes used for login
 
 // Routes
 app.use('/user', userRoutes);
+app.use('/login', loginRoutes);
 app.use('/', appRoutes); // declares the midleware used for routing
 
 // DB Connection

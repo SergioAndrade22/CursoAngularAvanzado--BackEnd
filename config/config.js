@@ -1,0 +1,1 @@
+module.exports.SEED = '-maybe-a-good-working-seed';

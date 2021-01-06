@@ -1,4 +1,10 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
+
+var validRoles = {
+    values: [ 'ADMIN_ROLE', 'USER_ROLE'],
+    message: '{VALUE} no es un rol válido.'
+}
 
 var userSchema = mongoose.Schema({ // se deben especificiar los campos para el schema
     name: { 
@@ -21,8 +27,11 @@ var userSchema = mongoose.Schema({ // se deben especificiar los campos para el s
     role: {
         type: String,
         required: true,
-        default: 'USER_ROLE'
+        default: 'USER_ROLE',
+        enum: validRoles
     }
 });
+
+userSchema.plugin(uniqueValidator, {message: 'Ya se encuentra un usuario registrado con este {PATH}.'});
 
 module.exports = mongoose.model('User', userSchema)

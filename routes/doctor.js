@@ -1,135 +1,138 @@
 var express = require('express');
-var bcryptjs = require('bcryptjs');
-
+var Doctor = require('../models/doctor');
 var mdAuthentication = require('../middlewares/authentication');
+const hospital = require('../models/hospital');
 
 var app = express();
 
-var User = require('../models/user');
-
 // ===========================================================
-// == GET ALL USERS
+// == DOCTORS GET
 // ===========================================================
 app.get('/', (req, res) => {
-    User.find({/* where to execute query */}, 'name email img role' /* Fields to retrieve */)
-        .exec( (err, users) => { // We could avoid using exec, but will need it later
-        if (err){
-            return res.status(500).json({
-                ok: false,
-                message: 'DB Error: Couldn\'t retrieve users',
-                errors: err
+    Doctor.find({})
+        .populate('user', 'name email')
+        .populate('hospital')
+        .exec((err, doctors) => {
+            if (err) {
+                return res.status(500).json({
+                    ok: false,
+                    message: 'DB Error: Failed to retrieve doctors',
+                    errors: err
+                });
+            }
+            
+            res.status(200).json({
+                ok: true,
+                doctors: doctors
             });
-        }
-        res.status(200).json({
-            ok: true,
-            users: users
         });
-    });
 });
 
 // ===========================================================
-// == POST A NEW USER
+// == DOCTOR POST
 // ===========================================================
 app.post('/', mdAuthentication.verifyToken, (req, res) => {
     var body = req.body;
 
-    var user = new User({
+    var doctor = new Doctor({
         name: body.name,
-        email: body.email,
-        password: bcryptjs.hashSync(body.password, 10),
-        img: body.img,
-        role: body.role
+        user: req.user._id,
+        hospital: body.hospital
     });
 
-    user.save( (err, savedUser) => {
-        if (err){
+    doctor.save( (err, savedDoctor) => {
+        if (err) {
             return res.status(400).json({
                 ok: false,
-                message: 'DB Error: Failed to create user',
+                message: 'DB Error: Failed to create doctor',
                 errors: err
             });
         }
-        res.status(201).json({
+
+        res.status(200).json({
             ok: true,
-            user: savedUser,
-            caller: req.user
+            doctor: savedDoctor
         });
     });
 });
 
 // ===========================================================
-// == UPDATE USER
+// == DOCTOR PUT
 // ===========================================================
 app.put('/:id', mdAuthentication.verifyToken, (req, res) => {
     var id = req.params.id;
     var body;
 
-    User.findById(id, (err, user) => {
-        if (err){
+    Doctor.findById(id, (err, doctor) => {
+        if (err) {
             return res.status(500).json({
                 ok: false,
-                message: 'DB Error: Error while looking for users',
+                message: 'DB Error: Error while looking for doctor',
                 errors: err
             });
         }
-        if (!user){
+
+        if (!doctor) {
             return res.status(400).json({
                 ok: false,
-                message: 'DB Error: Failed to find user with id: ' + id,
-                errors: { message: 'Non existent user' }
+                message: 'DB Error: Failed to find doctor with id: ' + id,
+                errors: { message: 'Non existent doctor' }
             });
         }
 
         body = req.body;
 
-        user.name = body.name;
-        user.email = body.email;
+        if (body.name) {doctor.name = body.name;}
 
-        user.save( (err, savedUser) => {
-            if (err){
+        if (body.hospital) {doctor.hospital = body.hospital;}
+
+        doctor.user = req.user._id;
+
+        doctor.save( (err, savedDoctor) => {
+            if (err) {
                 return res.status(400).json({
                     ok: false,
-                    message: 'DB Error: Failed to update user',
+                    message: 'DB Error: Failed to update doctor',
                     errors: err
                 });
             }
 
             res.status(200).json({
                 ok: true,
-                user: savedUser
+                doctor: savedDoctor
             });
         });
     });
 });
 
 // ===========================================================
-// == DELETE USER
+// == DOCTOR DELETE
 // ===========================================================
 app.delete('/:id', mdAuthentication.verifyToken, (req, res) => {
     var id = req.params.id;
 
-    User.findByIdAndRemove(id, (err, deletedUser) => {
-        if (err){
+    Doctor.findOneAndRemove(id, (err, deletedDoctor) => {
+        if (err) {
             return res.status(500).json({
                 ok: false,
-                message: 'DB Error: Failed to delete user',
+                message: 'DB Error: Failed to delete doctor',
                 errors: err
             });
         }
 
-        if (!deletedUser){
+        if (!deletedDoctor) {
             return res.status(400).json({
                 ok: false,
-                message: 'DB Error: Failed to find user with id: ' + id,
-                errors: { message: 'No such user in the database'}
+                message: 'DB Error: Failed to delete doctor with id: ' + id,
+                errors: { message: 'Non existent doctor' }
             });
         }
 
         res.status(200).json({
             ok: true,
-            user: deletedUser
-        })
+            doctor: deletedDoctor
+        });
     });
-})
+});
 
 module.exports = app;

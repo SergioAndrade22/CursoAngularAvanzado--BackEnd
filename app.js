@@ -1,6 +1,6 @@
-            ////////////////////////////////////////////////////////////
-            ///////////// ENTRY POINT FOR THIS APPLICATION /////////////
-            ///////////////////////////////////////////////////////////
+// ===========================================================
+// == ENTRY POINT FOR THE APPLICATION
+// ===========================================================
 
 // Required
 var express = require('express'); // loads express 
@@ -19,12 +19,16 @@ app.use(bodyParser.json()); // parse application/json
 
 // Import routes
 var appRoutes = require('./routes/app'); // imports the routes located in another file
-var userRoutes = require('./routes/user'); // imports the routes used for user
-var loginRoutes = require('./routes/login'); // imports the routes used for login
+var userRoutes = require('./routes/user'); // imports the routes used for users
+var loginRoutes = require('./routes/login'); // imports the routes used for logins
+var hospitalRoutes = require('./routes/hospital'); // imports the routes used for hospitals
+var doctorRoutes = require('./routes/doctor'); // imports the routes used for doctors
 
 // Routes
 app.use('/user', userRoutes);
 app.use('/login', loginRoutes);
+app.use('/hospital', hospitalRoutes);
+app.use('/doctor', doctorRoutes);
 app.use('/', appRoutes); // declares the midleware used for routing
 
 // DB Connection

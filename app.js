@@ -16,6 +16,11 @@ app.use(bodyParser.urlencoded({ extended: false })); // parse application/x-www-
  
 app.use(bodyParser.json()); // parse application/json
 
+// Server index config <-- used to display a file system interface on our server
+// var serveIndex = require('serve-index');
+// app.use(express.static(__dirname + '/'))
+// app.use('/uploads', serveIndex(__dirname + '/uploads'));
+
 
 // Import routes
 var appRoutes = require('./routes/app'); // imports the routes located in another file
@@ -23,12 +28,18 @@ var userRoutes = require('./routes/user'); // imports the routes used for users
 var loginRoutes = require('./routes/login'); // imports the routes used for logins
 var hospitalRoutes = require('./routes/hospital'); // imports the routes used for hospitals
 var doctorRoutes = require('./routes/doctor'); // imports the routes used for doctors
+var searchRoutes = require('./routes/search'); // imports the routes used for search
+var uploadRoutes = require('./routes/upload');
+var imgRoutes = require('./routes/img');
 
 // Routes
+app.use('/search', searchRoutes);
 app.use('/user', userRoutes);
 app.use('/login', loginRoutes);
 app.use('/hospital', hospitalRoutes);
 app.use('/doctor', doctorRoutes);
+app.use('/upload', uploadRoutes);
+app.use('/img', imgRoutes);
 app.use('/', appRoutes); // declares the midleware used for routing
 
 // DB Connection

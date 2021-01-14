@@ -17,7 +17,7 @@ app.post('/', (req, res) => {
         if (err) {
             return res.status(500).json({
                 ok: false,
-                msg: 'DB Error: failure while looking for user',
+                message: 'DB Error: failure while looking for user',
                 errors: err
             });
         }
@@ -25,7 +25,7 @@ app.post('/', (req, res) => {
         if (!user){
             return res.status(400).json({
                 ok: false,
-                msg: 'Login Error: no user with email ' + body.email,
+                message: 'Login Error: no user with email ' + body.email,
                 errors: { message: 'Non existent user' }
             });
         }
@@ -33,7 +33,7 @@ app.post('/', (req, res) => {
         if(!bcryptjs.compareSync(body.password, user.password) ){
             return res.status(400).json({
                 ok: false,
-                msg: 'Login Error: Wrong password',
+                message: 'Login Error: Wrong password',
                 errors: { message: 'Wrong password' }
             });
         }

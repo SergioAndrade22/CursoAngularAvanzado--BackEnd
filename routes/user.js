@@ -11,7 +11,11 @@ var User = require('../models/user');
 // == GET ALL USERS
 // ===========================================================
 app.get('/', (req, res) => {
+    var offset = Number(req.query.offset) || 0;
+
     User.find({/* where to execute query */}, 'name email img role' /* Fields to retrieve */)
+        .skip(offset)
+        .limit(5)
         .exec( (err, users) => { // We could avoid using exec, but will need it later
         if (err){
             return res.status(500).json({
@@ -20,9 +24,21 @@ app.get('/', (req, res) => {
                 errors: err
             });
         }
-        res.status(200).json({
-            ok: true,
-            users: users
+
+        User.countDocuments({}, (err, count)=>{
+            if (err){
+                return res.status(500).json({
+                    ok: false,
+                    message: 'DB Error: Couldn\'t count users',
+                    errors: err
+                });
+            }
+
+            res.status(200).json({
+                ok: true,
+                cant: count,
+                users: users
+            });
         });
     });
 });

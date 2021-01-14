@@ -8,7 +8,11 @@ var app = express();
 // == HOSPITAL GET
 // ===========================================================
 app.get('/', (req, res) => {
+    var offset = Number(req.query.offset) || 0;
+
     Hospital.find({})
+        .skip(offset)
+        .limit(5)
         .populate('user', 'name email')
         .exec((err, hospitals) => {
             if (err){
@@ -19,11 +23,23 @@ app.get('/', (req, res) => {
                 });
             }
 
-            res.status(200).json({
-                ok: true,
-                hospitals: hospitals 
+            Hospital.countDocuments({}, (err, count) => {
+                if (err){
+                    return res.status(500).json({
+                        ok: false,
+                        message: 'DB Error: Couldn\'t count hospitals',
+                        errors: err
+                    });
+                }
+
+                res.status(200).json({
+                    ok: true,
+                    cant: count,
+                    hospitals: hospitals 
+                });
             });
-        });
+        }
+    );
 });
 
 // ===========================================================
